@@ -1,0 +1,11 @@
+{
+  "lambda": {
+    "role": "subnamics-executor",
+    "name": "subnamics",
+    "region": "us-east-1"
+  },
+  "api": {
+    "id": "7zwu9x5nvk",
+    "module": "bot"
+  }
+}
