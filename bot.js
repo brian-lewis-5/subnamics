@@ -10,7 +10,7 @@ function doWelcome() {
 
     generic
         .addBubble(format('Hi, there, I\'m Rosie. Zworp.'), format('I can help get the cat food or toilet paper you\'re looking for.'))
-        .addImage('http://www.medicalnewstoday.com/content/images/articles/283/283659/eggs.jpg')
+        .addImage('http://i.imgur.com/twTukoI.jpg')
         .addButton('I need cat food', 'I need cat food')
         .addButton('I need tp', 'I need tp')
         .addButton('I need something else', 'I need something else');
