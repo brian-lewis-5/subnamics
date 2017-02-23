@@ -60,7 +60,7 @@ function doCheckoutDolphinPrintTp() {
 
     generic
         .addBubble(format('Checkout'))
-        .addImage('http://i.imgur.com/olCeo4g.png')
+        .addImage('http://i.imgur.com/ErRkNHI.png')
         .addButton('Pay', 'Pay dolphin')
         .addButton('Cancel', 'Cancel dolphin');
 
