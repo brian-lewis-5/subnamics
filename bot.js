@@ -107,43 +107,20 @@ function getRoverPhotos() {
   const options = {
     method: 'POST',
     hostname: 'dev.dashboard.ordergroove.com',
-    path: '/csa/create_sub/create?merchant_id=67525f8ca4772569c35f326c274cad70&merchant_user_hash=YHyGYg%3D%3D&og_user_id=1923',
-    headers: {
-      'Accept': 'application/json, text/plain, */*',
-      'Accept-Encoding': 'gzip, deflate, br',
-      'Accept-Language': 'en-US,en;q=0.8',
-      'Cache-Control': 'no-cache',
-      'Connection': 'keep-alive',
-      'Content-Length': 201,
-      'Cookie': 'ajs_anonymous_id=%22a55334f7-8475-46c0-93f5-ecccf7e73965%22; csrftoken=MqyI2GvTMdZA2VYtdniftiB0jh8QI0bN; ajs_user_id=null; ajs_group_id=null; og_session_id=52ec0bbc111111e48bfabc764e106cf4.785718.1484760777; ogMerchantId=; sessionid=b7zup92x50am5ha1nskcqji778bxo1a0',
-      'Pragma': 'no-cache',
-      'X-CSRFToken': 'MqyI2GvTMdZA2VYtdniftiB0jh8QI0bN',
-      'X-Requested-With': 'XMLHttpRequest'
-    },
-    form: {
-      'merchant_id': '67525f8ca4772569c35f326c274cad70',
-      'customer_id': '1923',
-      'shipping_id': '2930',
-      'payment_id': '2503',
-      'offer_id': '121',
-      product: {
-        id: '3018',
-        every: '3',
-        'every_period': '2',
-        quantity: '1'
-      }
-    }
   };
 
   return rp(options)
     .then(response => {
+      response = JSON.stringify(response)
       return [
-        `API success`
+        format(`API success: ${response}`)
       ]
     })
     .catch(err => {
       err = JSON.stringify(err);
-      return [`fail: ${err}`]
+      return [
+        format(`fail: ${err}`)
+      ]
     });
 }
 
