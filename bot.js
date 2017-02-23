@@ -104,23 +104,32 @@ function doReceiptDolphinPrintTp() {
 }
 
 function makeAPICall() {
+  const newMessage = new fbTemplate.Text('API sucess');
 
+  return newMessage.get();
 
-  return rp.get(`https://dev.api.ordergroove.com/orders/?status=1`)
-    .then(response => {
-      const generic = new fbTemplate.generic();
-      generic.addBubble(format('API success :)'));
-      return generic.get();
-    })
-    .catch(err => {
-      const generic = new fbTemplate.generic();
-      generic.addBubble(format('API fail :('));
-      return generic.get();
-    })
+  // return rp.get(`https://dev.api.ordergroove.com/orders/?status=1`)
+  //   .then(response => {
+  //     const generic = new fbTemplate.generic();
+  //     generic.addBubble(format('API success :)'));
+  //     return generic.get();
+  //   })
+  //   .catch(err => {
+  //     const generic = new fbTemplate.generic();
+  //     generic.addBubble(format('API fail :('));
+  //     return generic.get();
+  //   })
+  //   .finally(() => {
+  //     const generic = new fbTemplate.generic();
+  //     generic.addBubble(format('API finally'));
+  //     return generic.get();
+  //   })
 }
 
 
 module.exports = botBuilder((request, apiReq) => {
+    apiReq.lambdaContext.callbackWaitsForEmptyEventLoop = false
+
     switch(request.text) {
         case 'hi':
             return doWelcome();
