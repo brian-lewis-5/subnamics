@@ -1,14 +1,15 @@
 /*global module*/
 'use strict';
 const botBuilder = require('claudia-bot-builder'),
+  rp = require('minimal-request-promise'),
   fbTemplate = botBuilder.fbTemplate,
   format = text => (text && text.substring(0, 80));
 
 function doWelcome() {
     const generic = new fbTemplate.generic();
-    
+
     generic
-        .addBubble(format('Welcome to Rosie!'), format('We\'ll help you get the cat food or TP you\'re looking for.'))
+        .addBubble(format('Welcome to Rosie!'), format('We\'ll help you get the cat food or toilet paper you\'re looking for.'))
         .addImage('http://www.medicalnewstoday.com/content/images/articles/283/283659/eggs.jpg')
         .addButton('I need cat food', 'I need cat food')
         .addButton('I need tp', 'I need tp')
@@ -19,7 +20,7 @@ function doWelcome() {
 
 function doINeedCatFood() {
     const generic = new fbTemplate.generic();
-    
+
     generic
         .addBubble(format('We got plenty of cat food'), format('What kind would you like?'))
         .addButton('I need organic', 'I need organic')
@@ -31,7 +32,7 @@ function doINeedCatFood() {
 
 function doINeedTp() {
     const generic = new fbTemplate.generic();
-    
+
     generic
         .addBubble(format('We got plenty of TP'), format('What kind would you like?'))
         .addButton('I need luxury', 'I need luxury')
@@ -43,7 +44,7 @@ function doINeedTp() {
 
 function doINeedDolphinPrintTp() {
     const generic = new fbTemplate.generic();
-    
+
     generic
         .addBubble(format('Dolphin Print TP'), format('100% Soft and Luxurious Cotton'))
         .addImage('http://i.imgur.com/S4A7gwO.png')
@@ -56,11 +57,12 @@ function doINeedDolphinPrintTp() {
 
 function doCheckoutDolphinPrintTp() {
     const generic = new fbTemplate.generic();
-    
+
     generic
         .addBubble(format('Checkout'))
         .addImage('http://i.imgur.com/olCeo4g.png')
-        .addButton('Pay', 'Pay dolphin');
+        .addButton('Pay', 'Pay dolphin')
+        .addButton('Cancel', 'Cancel dolphin');
 
     return generic.get();
 }
@@ -84,6 +86,23 @@ function doReceiptDolphinPrintTp() {
         .get();
 }
 
+function makeAPICall() {
+
+
+  return rp.get(`https://dev.api.ordergroove.com/orders/?status=1`)
+    .then(response => {
+      const generic = new fbTemplate.generic();
+      generic.addBubble(format('API success :)'));
+      return generic.get();
+    })
+    .catch(err => {
+      const generic = new fbTemplate.generic();
+      generic.addBubble(format('API fail :('));
+      return generic.get();
+    })
+}
+
+
 module.exports = botBuilder((request, apiReq) => {
     switch(request.text) {
         case 'hi':
@@ -98,6 +117,8 @@ module.exports = botBuilder((request, apiReq) => {
             return doCheckoutDolphinPrintTp();
         case 'Pay dolphin':
             return doReceiptDolphinPrintTp();
+        case 'api':
+            return makeAPICall();
         default:
             return 'Sorry, I don\'t understand';
     }
