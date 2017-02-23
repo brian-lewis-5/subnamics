@@ -1,6 +1,7 @@
 /*global module*/
 'use strict';
 const botBuilder = require('claudia-bot-builder'),
+  moment = require('moment'),
   rp = require('minimal-request-promise'),
   fbTemplate = botBuilder.fbTemplate,
   format = text => (text && text.substring(0, 80));
@@ -13,7 +14,7 @@ function doWelcome() {
         .addImage('http://www.medicalnewstoday.com/content/images/articles/283/283659/eggs.jpg')
         .addButton('I need cat food', 'I need cat food')
         .addButton('I need tp', 'I need tp')
-        .addButton('I need something else', 'I need something else');
+        .addButton('Check My Orders', 'My Orders');
 
     return generic.get();
 }
@@ -102,24 +103,32 @@ function doReceiptDolphinPrintTp() {
         .get();
 }
 
-function getRoverPhotos() {
+function getOrders() {
 
   const options = {
-    method: 'POST',
-    hostname: 'dev.dashboard.ordergroove.com',
+    method: 'GET',
+    hostname: 'dev.api.ordergroove.com',
+    path: '/orders/?status=1',
+    headers: {
+      'Authorization': '{"sig_field":"TestCust","ts":"1487893111","sig":"pxL/nw7GpC/N68k+yLVuK0ybgTDiR17Xbns0C0ZeXmk=","public_id":"0e5de2bedc5e11e3a2e4bc764e106cf4"}',
+    }
   };
 
   return rp(options)
     .then(response => {
-      response = JSON.stringify(response)
+      const body = JSON.parse(response.body)
+      const count = body.count;
+      const dateString = moment(body.results[0].place).format('MMMM Do YYYY')
       return [
-        format(`API success: ${response}`)
+        format(`You have ${count} orders`),
+        format(`Your next order is on ${dateString}`)
       ]
     })
     .catch(err => {
-      err = JSON.stringify(err);
+      err = JSON.stringify(err.body);
       return [
-        format(`fail: ${err}`)
+        format(`API failzz:`),
+        format(err)
       ]
     });
 }
@@ -147,8 +156,8 @@ const bot = botBuilder((request, apiReq) => {
         	return doCheckoutDolphinPrintTp();
         case 'Pay dolphin':
             return doReceiptDolphinPrintTp();
-        case 'api':
-            return getRoverPhotos();
+        case 'My Orders':
+            return getOrders();
         default:
             return 'Sorry, I don\'t understand';
     }
