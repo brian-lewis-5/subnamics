@@ -128,6 +128,8 @@ function makeAPICall() {
 
 
 module.exports = botBuilder((request, apiReq) => {
+    apiReq.lambdaContext.callbackWaitsForEmptyEventLoop = false
+
     switch(request.text) {
         case 'hi':
             return doWelcome();
