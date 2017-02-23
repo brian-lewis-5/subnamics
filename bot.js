@@ -76,7 +76,7 @@ function doCheckoutDolphinPrintTp() {
     const generic = new fbTemplate.generic();
 
     generic
-        .addBubble(format('By tapping Pay you agree to our terms of service'))
+        .addBubble()
         .addImage('http://i.imgur.com/ErRkNHI.png')
         .addButton('Pay', 'Pay dolphin')
         .addButton('Cancel', 'Cancel dolphin');
@@ -103,29 +103,17 @@ function doReceiptDolphinPrintTp() {
         .get();
 }
 
-function makeAPICall() {
-  const newMessage = new fbTemplate.Text('API sucess');
+function getRoverPhotos() {
 
-  return newMessage.get();
-
-  return rp.get(`https://google.com`)
+  return rp.get(`https://dev.api.ordergroove.com/orders/?status=1`)
     .then(response => {
-      return 'sucess';
-      // const generic = new fbTemplate.generic();
-      // generic.addBubble(format('API success :)'));
-      // return generic.get();
+      return [
+        `API success`
+      ]
     })
     .catch(err => {
-      return 'fail';
-      // const generic = new fbTemplate.generic();
-      // generic.addBubble(format('API fail :('));
-      // return generic.get();
-    })
-    .finally(() => {
-      return 'finally';
-      // const generic = new fbTemplate.generic();
-      // generic.addBubble(format('API finally'));
-      // return generic.get();
+      console.log(err)
+      return [`fail: ${err}`]
     })
 }
 
@@ -153,7 +141,7 @@ const bot = botBuilder((request, apiReq) => {
         case 'Pay dolphin':
             return doReceiptDolphinPrintTp();
         case 'api':
-            return makeAPICall();
+            return getRoverPhotos();
         default:
             return 'Sorry, I don\'t understand';
     }
