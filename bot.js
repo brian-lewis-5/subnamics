@@ -2,6 +2,7 @@
 'use strict';
 const botBuilder = require('claudia-bot-builder'),
   moment = require('moment'),
+  _ = require('lodash'),
   rp = require('minimal-request-promise'),
   fbTemplate = botBuilder.fbTemplate,
   format = text => (text && text.substring(0, 80));
@@ -121,14 +122,14 @@ function getOrders() {
       const orders = _.sortBy(body.results, ['place']);
       const dateString = moment(orders[0].place).format('MMMM Do YYYY')
       return [
-        format(`You have ${count} orders`),
+        format(`You have ${count} upcoming orders`),
         format(`Your next order is on ${dateString}`)
       ]
     })
     .catch(err => {
       err = JSON.stringify(err.body);
       return [
-        format(`API failzz:`),
+        format(`API fail:`),
         format(err)
       ]
     });
