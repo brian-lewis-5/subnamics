@@ -55,6 +55,23 @@ function doINeedDolphinPrintTp() {
     return generic.get();
 }
 
+function doQuantityDolphinPrintTp() {
+	return 'How many Dolphin Print TPs would you like us to send?';
+}
+
+function doFrequencyDolphinPrintTp() {
+	const generic = new fbTemplate.generic();
+
+    generic
+        .addBubble(format('How often would you like to receive Dolphin Print TP?'))
+        .addImage('http://i.imgur.com/S4A7gwO.png')
+        .addButton('Every week', 'Every week')
+        .addButton('Every month', 'Every month')
+        .addButton('Every other month', 'Every other month');
+
+    return generic.get();
+}
+
 function doCheckoutDolphinPrintTp() {
     const generic = new fbTemplate.generic();
 
@@ -115,6 +132,12 @@ module.exports = botBuilder((request, apiReq) => {
             return doINeedDolphinPrintTp();
         case 'Order dolphin':
             return doCheckoutDolphinPrintTp();
+        case 'Subscribe dolphin':
+        	return doQuantityDolphinPrintTp();
+        case '1':
+        	return doFrequencyDolphinPrintTp();
+        case 'Every month':
+        	return doCheckoutDolphinPrintTp();
         case 'Pay dolphin':
             return doReceiptDolphinPrintTp();
         case 'api':
