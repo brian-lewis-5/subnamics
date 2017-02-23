@@ -9,7 +9,7 @@ function doWelcome() {
     const generic = new fbTemplate.generic();
 
     generic
-        .addBubble(format('Welcome to Rosie!'), format('We\'ll help you get the cat food or toilet paper you\'re looking for.'))
+        .addBubble(format('Hi, there, I\'m Rosie. Zworp.'), format('I can help get the cat food or toilet paper you\'re looking for.'))
         .addImage('http://www.medicalnewstoday.com/content/images/articles/283/283659/eggs.jpg')
         .addButton('I need cat food', 'I need cat food')
         .addButton('I need tp', 'I need tp')
@@ -22,7 +22,7 @@ function doINeedCatFood() {
     const generic = new fbTemplate.generic();
 
     generic
-        .addBubble(format('We got plenty of cat food'), format('What kind would you like?'))
+        .addBubble(format('Zwee, we\'ve got plenty of cat food'), format('What do you look for in cat food?'))
         .addButton('I need organic', 'I need organic')
         .addButton('I need high fish content', 'I need high fish content')
         .addButton('I need non-smelly', 'I need non-smelly');
@@ -34,7 +34,7 @@ function doINeedTp() {
     const generic = new fbTemplate.generic();
 
     generic
-        .addBubble(format('We got plenty of TP'), format('What kind would you like?'))
+        .addBubble(format('Zwee, we\'ve got plenty of toilet paper'), format('What do you look for in toilet paper?'))
         .addButton('I need luxury', 'I need luxury')
         .addButton('I need economical', 'I need economical')
         .addButton('I need dolphin print', 'I need dolphin print');
@@ -46,7 +46,7 @@ function doINeedDolphinPrintTp() {
     const generic = new fbTemplate.generic();
 
     generic
-        .addBubble(format('Dolphin Print TP'), format('100% Soft and Luxurious Cotton'))
+        .addBubble(format('Dolphin Print Toilet Paper'), format('100% Soft and Luxurious Cotton, with fun dolphin print'))
         .addImage('http://i.imgur.com/S4A7gwO.png')
         .addButton('Order', 'Order dolphin')
         .addButton('Subscribe', 'Subscribe dolphin')
@@ -56,15 +56,14 @@ function doINeedDolphinPrintTp() {
 }
 
 function doQuantityDolphinPrintTp() {
-	return 'How many Dolphin Print TPs would you like us to send?';
+	return 'How many Dolphin Print Toilet Papers would you like us to send?';
 }
 
 function doFrequencyDolphinPrintTp() {
 	const generic = new fbTemplate.generic();
 
     generic
-        .addBubble(format('How often would you like to receive Dolphin Print TP?'))
-        .addImage('http://i.imgur.com/S4A7gwO.png')
+        .addBubble(format('How often would you like to receive Dolphin Print Toilet Paper?'))
         .addButton('Every week', 'Every week')
         .addButton('Every month', 'Every month')
         .addButton('Every other month', 'Every other month');
@@ -87,18 +86,18 @@ function doCheckoutDolphinPrintTp() {
 function doReceiptDolphinPrintTp() {
     return new fbTemplate.Receipt('Steve\'s Mom', '12345678902', 'USD', 'Visa 2345')
         .addTimestamp(new Date(1428444852))
-        .addItem('Dolphin Print TP')
-        .addSubtitle('100% Soft and Luxurious Cotton')
+        .addItem('Dolphin Print Toilet Paper')
+        .addSubtitle('100% Soft and Luxurious Cotton, with fun dolphin print')
         .addQuantity(1)
-        .addPrice(11.95)
+        .addPrice(7.95)
         .addCurrency('USD')
         .addImage('http://i.imgur.com/S4A7gwO.png')
         .addShippingAddress('75 Broad St 23rd Floor', '', 'New York', '10004',  'NY', 'US')
-        .addSubtotal(11.95)
+        .addSubtotal(7.95)
         .addShippingCost(4.95)
-        .addTax(1.06)
-        .addTotal(6.96)
-        .addAdjustment('New Customer Discount', 10)
+        .addTax(.34)
+        .addTotal(7.29)
+        .addAdjustment('Free Shipping Discount', 4.95)
         .addAdjustment('$1 Off Coupon', 1)
         .get();
 }
