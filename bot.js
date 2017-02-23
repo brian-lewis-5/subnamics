@@ -118,7 +118,8 @@ function getOrders() {
     .then(response => {
       const body = JSON.parse(response.body)
       const count = body.count;
-      const dateString = moment(body.results[0].place).format('MMMM Do YYYY')
+      const orders = _.sortBy(body.results, ['place']);
+      const dateString = moment(orders[0].place).format('MMMM Do YYYY')
       return [
         format(`You have ${count} orders`),
         format(`Your next order is on ${dateString}`)
