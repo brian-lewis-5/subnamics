@@ -59,7 +59,7 @@ function doCheckoutDolphinPrintTp() {
     const generic = new fbTemplate.generic();
 
     generic
-        .addBubble(format('Checkout'))
+        .addBubble()
         .addImage('http://i.imgur.com/ErRkNHI.png')
         .addButton('Pay', 'Pay dolphin')
         .addButton('Cancel', 'Cancel dolphin');
