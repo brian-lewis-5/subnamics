@@ -159,8 +159,11 @@ function doChooseShipping() {
         .get()
 }
 
+let prevMsg, msg;
+
 const bot = botBuilder((request, apiReq) => {
-  const msg = request.text.toLowerCase();
+    prevMsg = msg;
+    msg = request.text.toLowerCase();
 
     apiReq.lambdaContext.callbackWaitsForEmptyEventLoop = false
 
@@ -177,22 +180,22 @@ const bot = botBuilder((request, apiReq) => {
       return doWelcome();
     case(msg === 'tp' || msg === 'toilet paper'):
       return 'Are you interestd in toilet paper?';
-    case(msg === 'yes'):
+    case(prevMsg === 'tp' && msg === 'yes'):
       return doChooseTp();
     case(msg === 'fun tp'):
       return doFunTp();
     case(msg === 'order tp'):
-      return 'Should I send it to 71 Mott St, New York, NY, 11122?';
+      return 'Should I send it to 71 Mott St, New York, NY, 10013?';
     case(msg === 'no'):
       return doChooseShipping();
-    case(msg === 'yes broad'):
+    case(prevMsg === 'no' && msg === 'yes'):
       return 'go to payment conf screen';
     case(msg === 'yes payment'):
       return 'go to order conf screen';
     case (msg === 'check orders'):
       return getOrders();
     case(msg.length === 0):
-      return 'msg len 0';
+      return 'Should I send it to 75 Broad St, New York, NY, 10004?';
   }
 }, {
   platforms: ['facebook']
