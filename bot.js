@@ -79,8 +79,7 @@ function getOrderDetails(id) {
       const body = JSON.parse(response.body)
 
       return [
-        new fbTemplate.Receipt('Steve\'s Mom', '12345678902', 'USD', 'Visa 2345')
-          .addTimestamp(new Date(1428444852))
+        new fbTemplate.Receipt('Steve\'s Mom', '12345678902', 'USD', 'Visa')
           .addItem(body.results[0].product.name)
           .addQuantity(body.results[0].subscription_quantity)
           .addPrice(body.results[0].price)
