@@ -44,14 +44,16 @@ function getOrders() {
       const count = body.count;
       const orders = _.sortBy(body.results, ['place']);
       const dateString = moment(orders[0].place).format('MMMM Do YYYY');
-      const id = orders[0].public_id;
+      const public_id = orders[0].public_id;
+      const id = orders[0].id;
+
 
       const generic = new fbTemplate.generic();
 
       generic
           .addBubble(`Your next order is on ${dateString}`)
-          .addButton('More Details', `ORDER_DETAILS_${id}`)
-          .addButton('Send Now', 'SEND_NOW');
+          .addButton('More Details', `ORDER_DETAILS_${public_id}`)
+          .addButton('Send Now', `SEND_NOW_${id}`);
 
       return [
         generic.get()
@@ -100,11 +102,37 @@ function getOrderDetails(id) {
     });
 }
 
+function sendOrderNow(id) {
+  const options = {
+    method: 'GET',
+    hostname: 'dev.api.ordergroove.com',
+    path: `/order/${id}/send_now?merchant_id=0e5de2bedc5e11e3a2e4bc764e106cf4&merchant_user_id=TestCust&public_id=0e5de2bedc5e11e3a2e4bc764e106cf4&sig=1UPCbwiEzF5jlpsukCN1uGd4T%2B8SBn6AOoAfIGGfkNE%3D&sig_field=TestCust&ts=1487951530'`,
+    headers: {
+      'Authorization': apiToken,
+    }
+  };
+
+  return rp(options)
+    .then(response => {
+      const body = JSON.parse(response)
+
+      return [
+        `Success! You will receive this order ASAP. ${response}`
+        ];
+    })
+    .catch(err => {
+      err = JSON.stringify(err);
+      return [
+        format(`API fail: ${err}`)
+      ]
+    });
+}
+
 function doWelcome() {
     return [
         new fbTemplate.Image('http://i.imgur.com/twTukoI.jpg').get(),
-        new fbTemplate.Button('Welcome back, Gregory. Begin by either typing the name of a product or tapping "Check my orders".')
-            .addButton('Show my orders', 'check orders').get()
+        new fbTemplate.Button('Welcome back, Gregory. Begin by either typing the name of a product or tapping "My Next Shipment".')
+            .addButton('My Next Shipment', 'check orders').get()
     ]
 }
 
@@ -139,6 +167,10 @@ const bot = botBuilder((request, apiReq) => {
 
     if(_.startsWith(request.text, 'ORDER_DETAILS_')) {
       return getOrderDetails(request.text.slice('ORDER_DETAILS_'.length));
+    }
+
+    if(_.startsWith(request.text, 'SEND_NOW_')) {
+      return sendOrderNow(request.text.slice('SEND_NOW_'.length));
     }
 
   switch(true) {
