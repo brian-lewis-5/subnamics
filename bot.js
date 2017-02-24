@@ -6,7 +6,8 @@ const botBuilder = require('claudia-bot-builder'),
   rp = require('minimal-request-promise'),
   fbTemplate = botBuilder.fbTemplate,
   format = text => (text && text.substring(0, 80)),
-  apiToken = '{"sig_field":"TestCust","ts":"1487949935","sig":"0Z1unXN/28n8nvhpdZvVytglcg874p1r5lygAGsUlPk=","public_id":"0e5de2bedc5e11e3a2e4bc764e106cf4"}';
+  apiToken = '{"sig_field":"TestCust","ts":"1487949935","sig":"0Z1unXN/28n8nvhpdZvVytglcg874p1r5lygAGsUlPk=","public_id":"0e5de2bedc5e11e3a2e4bc764e106cf4"}',
+  queryString = '?merchant_id=0e5de2bedc5e11e3a2e4bc764e106cf4&merchant_user_id=TestCust&public_id=0e5de2bedc5e11e3a2e4bc764e106cf4&sig=Tlck9MY1lLxmr2qh7QubW2SagwLEc%2BySErMnfw4YmyA%3D&sig_field=TestCust&ts=1487952730';
 
 function doReceipt() {
     return new fbTemplate.Receipt('Gregory Mueller', '12345678902', 'USD', 'Visa 2345')
@@ -53,7 +54,8 @@ function getOrders() {
       generic
           .addBubble(`Your next order is on ${dateString}`)
           .addButton('More Details', `ORDER_DETAILS_${public_id}`)
-          .addButton('Send Now', `SEND_NOW_${id}`);
+          .addButton('Send Now', `SEND_NOW_${id}`)
+          .addButton('Skip Shipment', `SKIP_ORDER_${public_id}`);
 
       return [
         generic.get()
@@ -106,7 +108,7 @@ function sendOrderNow(id) {
   const options = {
     method: 'GET',
     hostname: 'dev.api.ordergroove.com',
-    path: `/order/${id}/send_now?merchant_id=0e5de2bedc5e11e3a2e4bc764e106cf4&merchant_user_id=TestCust&public_id=0e5de2bedc5e11e3a2e4bc764e106cf4&sig=Tlck9MY1lLxmr2qh7QubW2SagwLEc%2BySErMnfw4YmyA%3D&sig_field=TestCust&ts=1487952730`,
+    path: `/order/${id}/send_now${queryString}`,
     headers: {
       'Authorization': apiToken,
     }
@@ -125,6 +127,31 @@ function sendOrderNow(id) {
       ]
     });
 }
+
+function skipOrder(id) {
+  const options = {
+    method: 'GET',
+    hostname: 'dev.api.ordergroove.com',
+    path: `/order/${id}/cancel_order${queryString}`,
+    headers: {
+      'Authorization': apiToken,
+    }
+  };
+
+  return rp(options)
+    .then(response => {
+      return [
+        `Success! You have skipped this shipment`
+        ];
+    })
+    .catch(err => {
+      err = JSON.stringify(err);
+      return [
+        format(`API fail: ${err}`)
+      ]
+    });
+}
+
 
 function doWelcome() {
     return [
@@ -155,7 +182,7 @@ function doChooseShipping() {
     return new fbTemplate.Text('Where should I send it? Type an address or tap "Send location"')
         .addQuickReplyLocation()
         .get()
-} 
+}
 
 let prevMsg, msg;
 
@@ -171,6 +198,10 @@ const bot = botBuilder((request, apiReq) => {
 
     if(_.startsWith(request.text, 'SEND_NOW_')) {
       return sendOrderNow(request.text.slice('SEND_NOW_'.length));
+    }
+
+    if(_.startsWith(request.text, 'SKIP_ORDER_')) {
+      return skipOrder(request.text.slice('SKIP_ORDER_'.length));
     }
 
   switch(true) {
