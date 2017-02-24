@@ -8,8 +8,8 @@ const botBuilder = require('claudia-bot-builder'),
   format = text => (text && text.substring(0, 80)),
   apiToken = '{"sig_field":"TestCust","ts":"1487949935","sig":"0Z1unXN/28n8nvhpdZvVytglcg874p1r5lygAGsUlPk=","public_id":"0e5de2bedc5e11e3a2e4bc764e106cf4"}';
 
-function doReceiptDolphinPrintTp() {
-    return new fbTemplate.Receipt('Steve\'s Mom', '12345678902', 'USD', 'Visa 2345')
+function doReceipt() {
+    return new fbTemplate.Receipt('Gregory Mueller', '12345678902', 'USD', 'Visa 2345')
         .addTimestamp(new Date(1428444852))
         .addItem('Dolphin Print Toilet Paper')
         .addSubtitle('100% Soft and Luxurious Cotton, with fun dolphin print')
@@ -157,7 +157,7 @@ function doChooseShipping() {
     return new fbTemplate.Text('Where should I send it? Type an address or tap "Send location"')
         .addQuickReplyLocation()
         .get()
-}
+} 
 
 let prevMsg, msg;
 
@@ -188,8 +188,10 @@ const bot = botBuilder((request, apiReq) => {
       return 'Should I send it to 71 Mott St, New York, NY, 10013?';
     case(msg === 'no'):
       return doChooseShipping();
-    case(prevMsg === 'no' && msg === 'yes'):
-      return 'go to payment conf screen';
+    case(prevMsg.length === 0 && msg === 'yes'):
+      return 'Would you like to use the Visa card ending in 2345?';
+    case(prevMsg === 'yes' && msg === 'yes'):
+      return doReceipt();
     case(msg === 'yes payment'):
       return 'go to order conf screen';
     case (msg === 'check orders'):
