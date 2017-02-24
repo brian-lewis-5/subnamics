@@ -94,11 +94,11 @@ function getOrderDetails(id) {
 }
 
 function doWelcome() {
-    return new fbTemplate.generic()
-        .addBubble(format('Welcome back, Gregory.'), format('Begin by either typing the name of a product or tapping "Check my orders"'))
-        .addImage('http://i.imgur.com/twTukoI.jpg')
-        .addButton('Check my orders', 'check orders')
-        .get();
+    return [
+        new fbTemplate.Image('http://i.imgur.com/twTukoI.jpg').get(),
+        new fbTemplate.Button('Welcome back, Gregory. Begin by either typing the name of a product or tapping "Check my orders".')
+            .addButton('Show my orders', 'check orders').get()
+    ]
 }
 
 function doChooseTp() {
