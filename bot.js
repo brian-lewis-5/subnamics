@@ -6,8 +6,8 @@ const botBuilder = require('claudia-bot-builder'),
   rp = require('minimal-request-promise'),
   fbTemplate = botBuilder.fbTemplate,
   format = text => (text && text.substring(0, 80)),
-  apiToken = '{"sig_field":"TestCust","ts":"1487949935","sig":"0Z1unXN/28n8nvhpdZvVytglcg874p1r5lygAGsUlPk=","public_id":"0e5de2bedc5e11e3a2e4bc764e106cf4"}',
-  queryString = '?merchant_id=0e5de2bedc5e11e3a2e4bc764e106cf4&merchant_user_id=TestCust&public_id=0e5de2bedc5e11e3a2e4bc764e106cf4&sig=Tlck9MY1lLxmr2qh7QubW2SagwLEc%2BySErMnfw4YmyA%3D&sig_field=TestCust&ts=1487952730';
+  apiToken = '{"sig_field":"TestCust","ts":"1487962494","sig":"pVvfYAtJ6fnUeJ72Oy4dULE2Z0sezQv8gwKilaxGcwU=","public_id":"0e5de2bedc5e11e3a2e4bc764e106cf4"}',
+  queryString = '?merchant_id=0e5de2bedc5e11e3a2e4bc764e106cf4&merchant_user_id=TestCust&public_id=0e5de2bedc5e11e3a2e4bc764e106cf4&sig=lMTz46Ux5vi2fjnNH4VSuMBXPZJjRwPJlfyvgupzk%2BE%3D&sig_field=TestCust&ts=1487962549';
 
 function doReceipt() {
     return new fbTemplate.Receipt('Gregory Mueller', '12345678902', 'USD', 'Visa 2345')
