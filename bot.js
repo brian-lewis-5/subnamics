@@ -111,7 +111,7 @@ function getOrders() {
     hostname: 'dev.api.ordergroove.com',
     path: '/orders/?status=1',
     headers: {
-      'Authorization': '{"sig_field":"TestCust","ts":"1487893111","sig":"pxL/nw7GpC/N68k+yLVuK0ybgTDiR17Xbns0C0ZeXmk=","public_id":"0e5de2bedc5e11e3a2e4bc764e106cf4"}',
+      'Authorization': '{"sig_field":"TestCust","ts":"1487911580","sig":"niP8KgymfSQicRL0w5x471t/fsHmyrf4uII0K1CmMO4=","public_id":"0e5de2bedc5e11e3a2e4bc764e106cf4"}',
     }
   };
 
@@ -120,10 +120,45 @@ function getOrders() {
       const body = JSON.parse(response.body)
       const count = body.count;
       const orders = _.sortBy(body.results, ['place']);
-      const dateString = moment(orders[0].place).format('MMMM Do YYYY')
+      const dateString = moment(orders[0].place).format('MMMM Do YYYY');
+      const id = orders[0].public_id;
+
+      const generic = new fbTemplate.generic();
+
+      generic
+          .addBubble(`Your next order is on ${dateString}`)
+          .addButton('More Details', `ORDER_DETAILS_${id}`)
+
       return [
         format(`You have ${count} upcoming orders`),
-        format(`Your next order is on ${dateString}`)
+        generic.get()
+      ]
+    })
+    .catch(err => {
+      err = JSON.stringify(err.body);
+      return [
+        format(`API fail:`),
+        format(err)
+      ]
+    });
+}
+
+function getOrderDetails(id) {
+  const options = {
+    method: 'GET',
+    hostname: 'dev.api.ordergroove.com',
+    path: `/msi/items/?order_id=${id}`,
+    headers: {
+      'Authorization': '{"sig_field":"TestCust","ts":"1487911580","sig":"niP8KgymfSQicRL0w5x471t/fsHmyrf4uII0K1CmMO4=","public_id":"0e5de2bedc5e11e3a2e4bc764e106cf4"}',
+    }
+  };
+
+  return rp(options)
+    .then(response => {
+      const body = JSON.parse(response.body)
+
+      return [
+        format(`upcoming order for a ${body.results[0].product.name}`),
       ]
     })
     .catch(err => {
@@ -138,6 +173,10 @@ function getOrders() {
 
 const bot = botBuilder((request, apiReq) => {
     apiReq.lambdaContext.callbackWaitsForEmptyEventLoop = false
+
+    if(_.startsWith(request.text, 'ORDER_DETAILS_')) {
+      return getOrderDetails(request.text.slice('ORDER_DETAILS_'.length));
+    }
 
     switch(request.text) {
         case 'hi':
