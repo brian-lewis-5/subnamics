@@ -154,10 +154,9 @@ function doFunTp() {
 }
 
 function doChooseShipping() {
-    return 'egg';
-    // return new fbTemplate.generic()
-    //     .addBubble(format('Where should I send it? Type an address or tap "share location"'))
-    //     .get();
+    return new fbTemplate.Text('Where should I send it? Type an address or tap "Send location"')
+        .addQuickReplyLocation()
+        .get()
 }
 
 const bot = botBuilder((request, apiReq) => {
@@ -192,6 +191,8 @@ const bot = botBuilder((request, apiReq) => {
       return 'go to order conf screen';
     case (msg === 'check orders'):
       return getOrders();
+    case(msg.length === 0):
+      return 'msg len 0';
   }
 }, {
   platforms: ['facebook']
