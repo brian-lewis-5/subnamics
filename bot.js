@@ -16,7 +16,7 @@ function doReceipt() {
         .addQuantity(1)
         .addPrice(1.95)
         .addCurrency('USD')
-        .addImage('http://i.imgur.com/S4A7gwO.png')
+        .addImage('http://i.imgur.com/MbaUskV.png')
         .addShippingAddress('75 Broad St 23rd Floor', '', 'New York', '10004',  'NY', 'US')
         .addSubtotal(1.95)
         .addShippingCost(5)
@@ -79,19 +79,23 @@ function getOrderDetails(id) {
   return rp(options)
     .then(response => {
       const body = JSON.parse(response.body)
+      const receipt = new fbTemplate.Receipt('Steve\'s Mom', '12345678902', 'USD', 'Visa')
+
+      _.forEach(body.results, (item) => {
+        receipt.addItem(item.product.name)
+        .addQuantity(item.subscription_quantity)
+        .addPrice(item.price)
+        .addCurrency('USD')
+        .addImage(item.product.image_url)
+        .addShippingCost(item.extra_cost)
+        .addTotal(item.total_price)
+        .addAdjustment('Free Shipping Discount', 5.25);
+      });
+
 
       return [
-        new fbTemplate.Receipt('Steve\'s Mom', '12345678902', 'USD', 'Visa')
-          .addItem(body.results[0].product.name)
-          .addQuantity(body.results[0].subscription_quantity)
-          .addPrice(body.results[0].price)
-          .addCurrency('USD')
-          .addImage(body.results[0].product.image_url)
-          .addShippingCost(body.results[0].extra_cost)
-          .addTotal(body.results[0].total_price)
-          .addAdjustment('Free Shipping Discount', 5.95)
-          .get()
-        ];
+        receipt.get()
+      ];
     })
     .catch(err => {
       err = JSON.stringify(err.body);
@@ -171,6 +175,7 @@ function doChooseTp() {
 function doFunTp() {
     return new fbTemplate.generic()
         .addBubble(format('Great! I found Rosie\'s Toilet Paper. You can either place an order or subscribe'))
+        .addImage('http://i.imgur.com/MbaUskV.png')
         .addButton('Place order', 'order tp')
         .addButton('Subscribe', 'subscribe tp')
         .get();
@@ -183,8 +188,8 @@ function doChooseShipping() {
 }
 
 function doFinale() {
-  return new fbTemplate.generic()
-        .addBubble(format('Thanks for shopping. Now share your purchase!'))
+    return new fbTemplate.generic()
+        .addBubble(format('Thanks for shopping, now share your purchase!'))
         .addShareButton()
         .addButton('Shop more', 'hi')
         .get();
