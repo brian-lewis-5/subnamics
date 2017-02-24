@@ -106,7 +106,7 @@ function sendOrderNow(id) {
   const options = {
     method: 'GET',
     hostname: 'dev.api.ordergroove.com',
-    path: `/order/${id}/send_now?merchant_id=0e5de2bedc5e11e3a2e4bc764e106cf4&merchant_user_id=TestCust&public_id=0e5de2bedc5e11e3a2e4bc764e106cf4&sig=1UPCbwiEzF5jlpsukCN1uGd4T%2B8SBn6AOoAfIGGfkNE%3D&sig_field=TestCust&ts=1487951530'`,
+    path: `/order/${id}/send_now?merchant_id=0e5de2bedc5e11e3a2e4bc764e106cf4&merchant_user_id=TestCust&public_id=0e5de2bedc5e11e3a2e4bc764e106cf4&sig=Tlck9MY1lLxmr2qh7QubW2SagwLEc%2BySErMnfw4YmyA%3D&sig_field=TestCust&ts=1487952730`,
     headers: {
       'Authorization': apiToken,
     }
@@ -114,10 +114,8 @@ function sendOrderNow(id) {
 
   return rp(options)
     .then(response => {
-      const body = JSON.parse(response)
-
       return [
-        `Success! You will receive this order ASAP. ${response}`
+        `Success! You will receive this order ASAP.`
         ];
     })
     .catch(err => {
