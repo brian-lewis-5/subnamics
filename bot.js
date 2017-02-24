@@ -79,19 +79,23 @@ function getOrderDetails(id) {
   return rp(options)
     .then(response => {
       const body = JSON.parse(response.body)
+      const receipt = new fbTemplate.Receipt('Steve\'s Mom', '12345678902', 'USD', 'Visa')
+
+      _.forEach(body.results, (item) => {
+        receipt.addItem(item.product.name)
+        .addQuantity(item.subscription_quantity)
+        .addPrice(item.price)
+        .addCurrency('USD')
+        .addImage(item.product.image_url)
+        .addShippingCost(item.extra_cost)
+        .addTotal(item.total_price)
+        .addAdjustment('Free Shipping Discount', 5.25);
+      });
+
 
       return [
-        new fbTemplate.Receipt('Steve\'s Mom', '12345678902', 'USD', 'Visa')
-          .addItem(body.results[0].product.name)
-          .addQuantity(body.results[0].subscription_quantity)
-          .addPrice(body.results[0].price)
-          .addCurrency('USD')
-          .addImage(body.results[0].product.image_url)
-          .addShippingCost(body.results[0].extra_cost)
-          .addTotal(body.results[0].total_price)
-          .addAdjustment('Free Shipping Discount', 5.95)
-          .get()
-        ];
+        receipt.get()
+      ];
     })
     .catch(err => {
       err = JSON.stringify(err.body);
