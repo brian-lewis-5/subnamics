@@ -16,7 +16,7 @@ function doReceipt() {
         .addQuantity(1)
         .addPrice(1.95)
         .addCurrency('USD')
-        .addImage('http://i.imgur.com/S4A7gwO.png')
+        .addImage('http://i.imgur.com/MbaUskV.png')
         .addShippingAddress('75 Broad St 23rd Floor', '', 'New York', '10004',  'NY', 'US')
         .addSubtotal(1.95)
         .addShippingCost(5)
@@ -175,6 +175,7 @@ function doChooseTp() {
 function doFunTp() {
     return new fbTemplate.generic()
         .addBubble(format('Great! I found Rosie\'s Toilet Paper. You can either place an order or subscribe'))
+        .addImage('http://i.imgur.com/MbaUskV.png')
         .addButton('Place order', 'order tp')
         .addButton('Subscribe', 'subscribe tp')
         .get();
@@ -184,6 +185,14 @@ function doChooseShipping() {
     return new fbTemplate.Text('Where should I send it? Type an address or tap "Send location"')
         .addQuickReplyLocation()
         .get()
+}
+
+function doFinale() {
+    return new fbTemplate.generic()
+        .addBubble(format('Thanks for shopping, now share your purchase!'))
+        .addShareButton()
+        .addButton('Shop more', 'hi')
+        .get();
 }
 
 let prevMsg, msg;
@@ -222,7 +231,7 @@ const bot = botBuilder((request, apiReq) => {
     case(prevMsg.length === 0 && msg === 'yes'):
       return 'Would you like to use the Visa card ending in 2345?';
     case(prevMsg === 'yes' && msg === 'yes'):
-      return doReceipt();
+      return [doReceipt(), doFinale()];
     case(msg === 'yes payment'):
       return 'go to order conf screen';
     case (msg === 'check orders'):
