@@ -51,17 +51,15 @@ function getOrders() {
       generic
           .addBubble(`Your next order is on ${dateString}`)
           .addButton('More Details', `ORDER_DETAILS_${id}`)
-          .addButton('Send Now')
+          .addButton('Send Now', 'SEND_NOW');
 
       return [
         generic.get()
       ]
     })
     .catch(err => {
-      str = JSON.stringify(err.body);
       return [
-        format(`API fail:`),
-        format(str)
+        format(`API fail:`)
       ]
     });
 }
@@ -81,8 +79,18 @@ function getOrderDetails(id) {
       const body = JSON.parse(response.body)
 
       return [
-        format(`upcoming order for a ${body.results[0].product.name}`),
-      ]
+        new fbTemplate.Receipt('Steve\'s Mom', '12345678902', 'USD', 'Visa 2345')
+          .addTimestamp(new Date(1428444852))
+          .addItem(body.results[0].product.name)
+          .addQuantity(body.results[0].subscription_quantity)
+          .addPrice(body.results[0].price)
+          .addCurrency('USD')
+          .addImage(body.results[0].product.image_url)
+          .addShippingCost(body.results[0].extra_cost)
+          .addTotal(body.results[0].total_price)
+          .addAdjustment('Free Shipping Discount', 5.95)
+          .get()
+        ];
     })
     .catch(err => {
       err = JSON.stringify(err.body);
