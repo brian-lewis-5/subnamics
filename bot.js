@@ -5,7 +5,8 @@ const botBuilder = require('claudia-bot-builder'),
   _ = require('lodash'),
   rp = require('minimal-request-promise'),
   fbTemplate = botBuilder.fbTemplate,
-  format = text => (text && text.substring(0, 80));
+  format = text => (text && text.substring(0, 80)),
+  apiToken = '{"sig_field":"TestCust","ts":"1487949935","sig":"0Z1unXN/28n8nvhpdZvVytglcg874p1r5lygAGsUlPk=","public_id":"0e5de2bedc5e11e3a2e4bc764e106cf4"}';
 
 function doReceiptDolphinPrintTp() {
     return new fbTemplate.Receipt('Steve\'s Mom', '12345678902', 'USD', 'Visa 2345')
@@ -33,7 +34,7 @@ function getOrders() {
     hostname: 'dev.api.ordergroove.com',
     path: '/orders/?status=1',
     headers: {
-      'Authorization': '{"sig_field":"TestCust","ts":"1487911580","sig":"niP8KgymfSQicRL0w5x471t/fsHmyrf4uII0K1CmMO4=","public_id":"0e5de2bedc5e11e3a2e4bc764e106cf4"}',
+      'Authorization': apiToken,
     }
   };
 
@@ -50,17 +51,17 @@ function getOrders() {
       generic
           .addBubble(`Your next order is on ${dateString}`)
           .addButton('More Details', `ORDER_DETAILS_${id}`)
+          .addButton('Send Now')
 
       return [
-        format(`You have ${count} upcoming orders`),
         generic.get()
       ]
     })
     .catch(err => {
-      err = JSON.stringify(err.body);
+      str = JSON.stringify(err.body);
       return [
         format(`API fail:`),
-        format(err)
+        format(str)
       ]
     });
 }
@@ -71,7 +72,7 @@ function getOrderDetails(id) {
     hostname: 'dev.api.ordergroove.com',
     path: `/msi/items/?order_id=${id}`,
     headers: {
-      'Authorization': '{"sig_field":"TestCust","ts":"1487911580","sig":"niP8KgymfSQicRL0w5x471t/fsHmyrf4uII0K1CmMO4=","public_id":"0e5de2bedc5e11e3a2e4bc764e106cf4"}',
+      'Authorization': apiToken,
     }
   };
 
@@ -150,6 +151,8 @@ const bot = botBuilder((request, apiReq) => {
       return 'go to payment conf screen';
     case(msg === 'yes payment'):
       return 'go to order conf screen';
+    case (msg === 'check orders'):
+      return getOrders();
   }
 }, {
   platforms: ['facebook']
