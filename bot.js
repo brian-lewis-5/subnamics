@@ -7,18 +7,18 @@ const botBuilder = require('claudia-bot-builder'),
   fbTemplate = botBuilder.fbTemplate,
   format = text => (text && text.substring(0, 80));
 
-function doWelcome() {
-    const generic = new fbTemplate.generic();
+// function doWelcome() {
+//     const generic = new fbTemplate.generic();
 
-    generic
-        .addBubble(format('Hi, there, I\'m Rosie. Zworp.'), format('I can help get the cat food or toilet paper you\'re looking for.'))
-        .addImage('http://i.imgur.com/twTukoI.jpg')
-        .addButton('I need cat food', 'I need cat food')
-        .addButton('I need tp', 'I need tp')
-        .addButton('Check My Orders', 'My Orders');
+//     generic
+//         .addBubble(format('Hi, there, I\'m Rosie. Zworp.'), format('I can help get the cat food or toilet paper you\'re looking for.'))
+//         .addImage('http://i.imgur.com/twTukoI.jpg')
+//         .addButton('I need cat food', 'I need cat food')
+//         .addButton('I need tp', 'I need tp')
+//         .addButton('Check My Orders', 'My Orders');
 
-    return generic.get();
-}
+//     return generic.get();
+// }
 
 function doINeedCatFood() {
     const generic = new fbTemplate.generic();
@@ -170,38 +170,75 @@ function getOrderDetails(id) {
     });
 }
 
+function doWelcome() {
+	const generic = new fbTemplate.generic();
+
+	generic.addImage('http://i.imgur.com/twTukoI.jpg');
+	return generic.get();
+	// const generic = new fbTemplate.generic();
+
+ //    generic
+ //        .addBubble(format('Hi, there, I\'m Rosie. Zworp.'), format('I can help get the cat food or toilet paper you\'re looking for.'))
+ //        .addImage('http://i.imgur.com/twTukoI.jpg')
+ //        .addButton('I need cat food', 'I need cat food')
+ //        .addButton('I need tp', 'I need tp')
+ //        .addButton('Check My Orders', 'My Orders');
+
+ //    return generic.get();
+}
+
 
 const bot = botBuilder((request, apiReq) => {
+	const msg = request.text.toLowerCase();
+
     apiReq.lambdaContext.callbackWaitsForEmptyEventLoop = false
 
     if(_.startsWith(request.text, 'ORDER_DETAILS_')) {
       return getOrderDetails(request.text.slice('ORDER_DETAILS_'.length));
     }
 
-    switch(request.text) {
-        case 'hi':
-            return doWelcome();
-        case 'I need cat food':
-            return doINeedCatFood();
-        case 'I need tp':
-            return doINeedTp();
-        case 'I need dolphin print':
-            return doINeedDolphinPrintTp();
-        case 'Order dolphin':
-            return doCheckoutDolphinPrintTp();
-        case 'Subscribe dolphin':
-        	return doQuantityDolphinPrintTp();
-        case '1':
-        	return doFrequencyDolphinPrintTp();
-        case 'Every month':
-        	return doCheckoutDolphinPrintTp();
-        case 'Pay dolphin':
-            return doReceiptDolphinPrintTp();
-        case 'My Orders':
-            return getOrders();
-        default:
-            return 'Sorry, I don\'t understand';
-    }
+	switch(true) {
+		case(msg === 'hi' || msg === 'hello'):
+			return doWelcome();
+		case(msg === 'tp' || msg === 'toilet paper'):
+			return 'go to are you interested in tp screen';
+		case(msg === 'yes tp'):
+			return 'go to choose tp description screen';
+		case(msg === 'fun'):
+			return 'go to fun tp screen';
+		case(msg === 'place order'):
+			return 'go to should i send to mott screen';
+		case(msg === 'no mott'):
+			return 'go to where should i send it screen';
+		case(msg === 'yes broad'):
+			return 'go to payment conf screen';
+		case(msg === 'yes payment'):
+			return 'go to order conf screen';
+	}
+
+    // switch(request.text) {
+    //     case 'hi':
+    //         return doWelcome();
+    //     case 'I need cat food':
+    //         return doINeedCatFood();
+    //     case 'I need tp':
+    //         return doINeedTp();
+    //     case 'I need dolphin print':
+    //         return doINeedDolphinPrintTp();
+    //     case 'Order dolphin':
+    //         return doCheckoutDolphinPrintTp();
+    //     case 'Subscribe dolphin':
+    //     	return doQuantityDolphinPrintTp();
+    //     case '1':
+    //     	return doFrequencyDolphinPrintTp();
+    //     case 'Every month':
+    //     	return doCheckoutDolphinPrintTp();
+    //     case 'Pay dolphin':
+    //         return doReceiptDolphinPrintTp();
+    //     case 'My Orders':
+    //         return getOrders();
+    //     default:
+    //         return 'Sorry, I don\'t understand';
 }, {
   platforms: ['facebook']
 });
