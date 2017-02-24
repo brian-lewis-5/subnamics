@@ -182,6 +182,14 @@ function doChooseShipping() {
         .get()
 }
 
+function doFinale() {
+  return new fbTemplate.generic()
+        .addBubble(format('Thanks for shopping. Now share your purchase!'))
+        .addShareButton()
+        .addButton('Shop more', 'hi')
+        .get();
+}
+
 let prevMsg, msg;
 
 const bot = botBuilder((request, apiReq) => {
@@ -218,7 +226,7 @@ const bot = botBuilder((request, apiReq) => {
     case(prevMsg.length === 0 && msg === 'yes'):
       return 'Would you like to use the Visa card ending in 2345?';
     case(prevMsg === 'yes' && msg === 'yes'):
-      return doReceipt();
+      return [doReceipt(), doFinale()];
     case(msg === 'yes payment'):
       return 'go to order conf screen';
     case (msg === 'check orders'):
