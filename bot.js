@@ -12,19 +12,17 @@ const botBuilder = require('claudia-bot-builder'),
 function doReceipt() {
     return new fbTemplate.Receipt('Gregory Mueller', '12345678902', 'USD', 'Visa 2345')
         .addTimestamp(new Date(1428444852))
-        .addItem('Dolphin Print Toilet Paper')
-        .addSubtitle('100% Soft and Luxurious Cotton, with fun dolphin print')
+        .addItem('Rosie\'s Toilet Paper')
         .addQuantity(1)
-        .addPrice(7.95)
+        .addPrice(1.95)
         .addCurrency('USD')
         .addImage('http://i.imgur.com/S4A7gwO.png')
         .addShippingAddress('75 Broad St 23rd Floor', '', 'New York', '10004',  'NY', 'US')
-        .addSubtotal(7.95)
-        .addShippingCost(4.95)
-        .addTax(.34)
-        .addTotal(7.29)
-        .addAdjustment('Free Shipping Discount', 4.95)
-        .addAdjustment('$1 Off Coupon', 1)
+        .addSubtotal(1.95)
+        .addShippingCost(5)
+        .addTax(.17)
+        .addTotal(2.13)
+        .addAdjustment('Free Shipping', 5.00)
         .get();
 }
 
@@ -166,13 +164,13 @@ function doChooseTp() {
         .addBubble(format('Choose a description of the toilet paper you\'re after'))
         .addButton('Luxurious', 'luxury tp')
         .addButton('Economical', 'economical tp')
-        .addButton('Fun', 'fun tp')
+        .addButton('Rosie\'s', 'fun tp')
         .get();
 }
 
 function doFunTp() {
     return new fbTemplate.generic()
-        .addBubble(format('Great! I found fun toilet paper. You can either place an order or subscribe'))
+        .addBubble(format('Great! I found Rosie\'s Toilet Paper. You can either place an order or subscribe'))
         .addButton('Place order', 'order tp')
         .addButton('Subscribe', 'subscribe tp')
         .get();
